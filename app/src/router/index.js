@@ -18,10 +18,14 @@ const routes = [
         path : '/dashboard',
         component: () => import("@/views/DashBoard")
     },    {
+        name: 'Tracking',
+        path : '/tracking',
+        component: () => import("@/views/Tracking")
+    },    {
         name: 'Commande',
         path : '/commande',
         component: () => import("@/views/Commande")
-    },
+    },   
 ]
 export const router = createRouter({
     history: createWebHistory(),

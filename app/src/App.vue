@@ -1,15 +1,31 @@
 <template>
-    <navBar/>
-    <router-view/>
+  <div>
+    <Home v-if = "view === 'home'"/>
+    <Login v-if="view === 'login'"/>
+    <Register v-if="view === 'register'"/>
+    <Commande v-if="view === 'commande'"/>
+    <!-- <Tracking v-if="view === tracking"/> -->
+  </div>
 </template>
 
 <script>
-import navBar from '@/components/navBar.vue'
+import Home from '@/views/Home.vue'
+import Login from '@/views/Login.vue'
+import Register from '@/views/Register.vue'
+import Commande from '@/views/Commande.vue'
+// import Tracking from './views/Tracking.vue'
 
 export default {
   name: 'App',
   components: {
-    navBar
+    Home,
+    Login,
+    // Tracking,
+    Register,
+    Commande
+  },
+  computed :{
+    view(){return this.$store.getters.getView}
   }
 }
 </script>
