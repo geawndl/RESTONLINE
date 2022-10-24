@@ -1,5 +1,8 @@
 import { createRouter,createWebHistory } from "vue-router";
 
+import Register from '../views/Register'
+
+
 const routes = [
     {
         name: 'Home',
@@ -12,7 +15,7 @@ const routes = [
     },    {
         name: 'Register',
         path : '/register',
-        component: () => import("@/views/Register")
+        component:  Register
     },    {
         name: 'DashBoard',
         path : '/dashboard',
@@ -24,10 +27,8 @@ const routes = [
     },    {
         name: 'Commande',
         path : '/commande',
-        component: () => import("@/views/Commande")
+        component: () => import("../views/Commande")
     },   
 ]
-export const router = createRouter({
-    history: createWebHistory(),
-    routes, 
-})
+const router = createRouter({ history: createWebHistory(), routes })
+export default router
