@@ -1,14 +1,17 @@
+
+
 <template>
   <div>
+    <navBar v-show="!isHome"/>
     <RouterView />
-    <navBar />
   </div>
 </template>
 
 <script>
-
 import navBar from './components/navBar'
 // import Tracking from './views/Tracking.vue'
+
+
 
 export default {
   name: 'App',
@@ -17,9 +20,10 @@ export default {
   
   },
   computed :{
-    view(){return this.$store.getters.getView}
+    isHome() { return this.$route.name === "Home"},
   }
 }
+
 </script>
 
 <style>
