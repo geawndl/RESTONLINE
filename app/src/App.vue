@@ -13,7 +13,7 @@ import Home from '@/views/Home.vue'
 import Login from '@/views/Login.vue'
 import Register from '@/views/Register.vue'
 import Commande from '@/views/Commande.vue'
-// import Tracking from './views/Tracking.vue'
+// import Tracking from '@/views/Tracking.vue'
 
 export default {
   name: 'App',
