@@ -1,243 +1,248 @@
 <template>
-    <div class="container">
-  <div class="title">Registration</div>
-  <form action="#">
-    <div class="user__details">
-      <div class="input__box">
-        <span class="details">Full Name</span>
-        <input type="text" placeholder="E.g: John Smith" required>
-      </div>
-      <div class="input__box">
-        <span class="details">Username</span>
-        <input type="text" placeholder="johnWC98" required>
-      </div>
-      <div class="input__box">
-        <span class="details">Email</span>
-        <input type="email" placeholder="johnsmith@hotmail.com" required>
-      </div>
-      <div class="input__box">
-        <span class="details">Phone Number</span>
-        <input type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="012-345-6789" required>
-      </div>
-      <div class="input__box">
-        <span class="details">Password</span>
-        <input type="password" placeholder="********" required>
-      </div>
-      <div class="input__box">
-        <span class="details">Confirm Password</span>
-        <input type="password" placeholder="********" required>
-      </div>
+  <div class="register-container">
+    <div class="register-form-container">
+      <form id="registerForm" @submit="handleSubmit" novalidate autocomplete="off">
+        <h3>Create your account</h3>
+        <div class="form-group">
+          <label for="uName">Enter your name:
+          </label>
+          <input type="text" name="uName" placeholder="your full name" id="uName" class="form-control"
+                 v-model="registerObj.name" />
+          <p class="error-mess" v-if="errorObj.nameErr.length > 0">{{ errorObj.nameErr[0] }}</p>
+        </div>
 
+        <div class="form-group">
+          <label for="uEmail">Enter your email:
+          </label>
+          <input type="email" name="uEmail" placeholder="example@gmail.com" id="uEmail" class="form-control"
+                 v-model="registerObj.email" />
+          <p class="error-mess" v-if="errorObj.emailErr.length > 0">{{ errorObj.emailErr[0] }}</p>
+        </div>
+
+        <div class="form-group">
+          <label for="uPass">Enter your password:
+          </label>
+          <input type="password" name="uPass" placeholder="enter your password" id="uPass"
+                 class="form-control" v-model="registerObj.pass" />
+          <p class="error-mess" v-if="errorObj.passErr.length > 0">{{ errorObj.passErr[0] }}</p>
+        </div>
+
+        <div class="form-group">
+          <label for="uPassConfirm">Check your password again:
+          </label>
+          <input type="password" name="uPassConfirm" placeholder="enter your password again" id="uPassConfirm"
+                 class="form-control" v-model="registerObj.confirm" />
+          <p class="error-mess" v-if="errorObj.confirmErr.length > 0">{{ errorObj.confirmErr[0] }}</p>
+        </div>
+
+        <div class="form-group">
+          <label for="uPhone">Enter your phone number:
+          </label>
+          <input type="tel" name="uPhone" placeholder="enter your phone number" id="uPhone"
+                 class="form-control" v-model="registerObj.phone" />
+          <p class="error-mess" v-if="errorObj.phoneErr.length > 0">{{ errorObj.phoneErr[0] }}</p>
+        </div>
+
+        <div class="form-group">
+          <label for="uBirth">Enter your birthday:
+          </label>
+          <input type="date" name="uBirth" id="uBirth" class="form-control" @click="availableTime()"
+                 v-model="registerObj.birth" />
+          <p class="error-mess" v-if="errorObj.birthErr.length > 0">{{ errorObj.birthErr[0] }}</p>
+        </div>
+
+        <div class="form-group">
+          <input type="submit" value="join us" class="btn" />
+          <p>have an account? <router-link @click="scrollToTop()" to="/login">login</router-link>
+          </p>
+        </div>
+      </form>
     </div>
-    <div class="gender__details">
-      <input type="radio" name="gender" id="dot-1">
-      <input type="radio" name="gender" id="dot-2">
-      <input type="radio" name="gender" id="dot-3">
-      <span class="gender__title">Gender</span>
-      <div class="category">
-        <label for="dot-1">
-          <span class="dot one"></span>
-          <span>Male</span>
-        </label>
-        <label for="dot-2">
-          <span class="dot two"></span>
-          <span>Female</span>
-        </label>
-        <label for="dot-3">
-          <span class="dot three"></span>
-          <span>Prefer not to say</span>
-        </label>
-      </div>
-    </div>
-    <div class="button">
-      <input type="submit" value="Register">
-    </div>
-  </form>
-</div>
+  </div>
 </template>
 
 <script>
-    export default{
-        name: 'Register',
-        components: {},
-        data(){
-        
-        },
-        methods: {
+  import axios from 'axios';
+  export default {
+    name: "Register",
 
+    data() {
+      return {
+        registerObj: { name: "", email: "", pass: "", confirm: "", phone: "", birth: ""},
+        errorObj: { nameErr: [], emailErr: [], passErr: [], confirmErr: [], phoneErr: [], birthErr: []},
+      }
+    },
+
+    methods: {
+
+      resetCheckErr: function () {
+        this.errorObj.nameErr = [];
+        this.errorObj.emailErr = [];
+        this.errorObj.passErr = [];
+        this.errorObj.confirmErr = [];
+        this.errorObj.phoneErr = [];
+      },
+
+      checkEmptyErr: function () {
+        for (var typeErr in this.errorObj) {
+          if (this.errorObj[typeErr].length != 0) {
+            return false;
+          }
         }
-    }
+        return true;
+      },
+
+      checkForm: function () {
+        this.resetCheckErr();
+
+        if (!this.registerObj.name) {
+          this.errorObj.nameErr.push("Entering a name is required");
+        }
+        else {
+          if (!/^[A-Za-z]+$/.test(this.registerObj.name.replace(/\s/g, ""))) {
+            this.errorObj.nameErr.push('A name can only contain letters');
+          }
+        }
+        if (!this.registerObj.email) {
+          this.errorObj.emailErr.push("Entering a email is required");
+        }
+        else {
+          if (!/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/.test(this.registerObj.email)) {
+            this.errorObj.emailErr.push('Email must be valid');
+          }
+        }
+
+        if (!this.registerObj.pass) {
+          this.errorObj.passErr.push('Password is required');
+        }
+        else {
+          if (!/[!@#$%^&*]/.test(this.registerObj.pass)) {
+            this.errorObj.passErr.push('Password must contain at least 1 special character');
+          }
+
+          if (this.registerObj.pass.length < 8) {
+            this.errorObj.passErr.push('Password must be more than or equal 8 characters');
+          }
+        }
+
+        if (!this.registerObj.confirm) {
+          this.errorObj.confirmErr.push('Confirm password is required');
+        }
+        else {
+          if (this.registerObj.pass !== this.registerObj.confirm) {
+            this.errorObj.confirmErr.push('Confirm password must be match with password');
+          }
+        }
+      },
+
+      async handleSubmit(e) {
+        this.checkForm();
+
+        if (!this.checkEmptyErr()) {
+          e.preventDefault();
+        } else {
+            let data = {
+              user_name: this.registerObj.name,
+              user_email: this.registerObj.email,
+              user_phone: this.registerObj.phone,
+              user_password: this.registerObj.pass,
+              user_birth: this.registerObj.birth,
+            }
+            await axios.post("/users/", data);
+            this.$router.push("/login");
+          }
+        }
+      }
+  };
 </script>
 
+
 <style scoped>
-    /* all */
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap");
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
-}
-
-:root {
-  --main-blue: #71b7e6;
-  --main-purple: #9b59b6;
-  --main-grey: #ccc;
-  --sub-grey: #d9d9d9;
-}
-
-body {
-  display: flex;
-  height: 100vh;
-  justify-content: center; /*center vertically */
-  align-items: center; /* center horizontally */
-  background: linear-gradient(135deg, var(--main-blue), var(--main-purple));
-  padding: 10px;
-}
-/* container and form */
-.container {
-  max-width: 700px;
-  width: 100%;
-  background: #fff;
-  padding: 25px 30px;
-  border-radius: 5px;
-}
-.container .title {
-  font-size: 25px;
-  font-weight: 500;
-  position: relative;
-}
-
-.container .title::before {
-  content: "";
-  position: absolute;
-  height: 3.5px;
-  width: 30px;
-  background: linear-gradient(135deg, var(--main-blue), var(--main-purple));
-  left: 0;
-  bottom: 0;
-}
-
-.container form .user__details {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin: 20px 0 12px 0;
-}
-/* inside the form user details */
-form .user__details .input__box {
-  width: calc(100% / 2 - 20px);
-  margin-bottom: 15px;
-}
-
-.user__details .input__box .details {
-  font-weight: 500;
-  margin-bottom: 5px;
-  display: block;
-}
-.user__details .input__box input {
-  height: 45px;
-  width: 100%;
-  outline: none;
-  border-radius: 5px;
-  border: 1px solid var(--main-grey);
-  padding-left: 15px;
-  font-size: 16px;
-  border-bottom-width: 2px;
-  transition: all 0.3s ease;
-}
-
-.user__details .input__box input:focus,
-.user__details .input__box input:valid {
-  border-color: var(--main-purple);
-}
-
-/* inside the form gender details */
-
-form .gender__details .gender__title {
-  font-size: 20px;
-  font-weight: 500;
-}
-
-form .gender__details .category {
-  display: flex;
-  width: 80%;
-  margin: 15px 0;
-  justify-content: space-between;
-}
-
-.gender__details .category label {
-  display: flex;
-  align-items: center;
-}
-
-.gender__details .category .dot {
-  height: 18px;
-  width: 18px;
-  background: var(--sub-grey);
-  border-radius: 50%;
-  margin: 10px;
-  border: 5px solid transparent;
-  transition: all 0.3s ease;
-}
-
-#dot-1:checked ~ .category .one,
-#dot-2:checked ~ .category .two,
-#dot-3:checked ~ .category .three {
-  border-color: var(--sub-grey);
-  background: var(--main-purple);
-}
-
-form input[type="radio"] {
-  display: none;
-}
-
-/* submit button */
-form .button {
-  height: 45px;
-  margin: 45px 0;
-}
-
-form .button input {
-  height: 100%;
-  width: 100%;
-  outline: none;
-  color: #fff;
-  border: none;
-  font-size: 18px;
-  font-weight: 500;
-  border-radius: 5px;
-  background: linear-gradient(135deg, var(--main-blue), var(--main-purple));
-  transition: all 0.3s ease;
-}
-
-form .button input:hover {
-  background: linear-gradient(-135deg, var(--main-blue), var(--main-purple));
-}
-
-@media only screen and (max-width: 584px) {
-  .container {
-    max-width: 100%;
+  .register-container {
+    padding: 2rem 9%;
   }
 
-  form .user__details .input__box {
-    margin-bottom: 15px;
+  .register-container .register-form-container {
+    background: #fff;
+  }
+
+  .register-container .register-form-container form {
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    max-width: 50rem;
     width: 100%;
+    box-shadow: 0 1rem 1rem rgba(0, 0, 0, 0.05);
+    border: 0.1rem solid rgba(0, 0, 0, 1);
+    padding: 2rem;
+    border-radius: 0.5rem;
+    animation: fadeUp 0.4s linear;
   }
 
-  form .gender__details .category {
+  .register-container .register-form-container form h3 {
+    padding-bottom: 1rem;
+    font-size: 2rem;
+    text-transform: uppercase;
+    color: #0e074d;
+    margin: 0;
+  }
+
+  .register-container .register-form-container form .form-control {
+    margin: 0.7rem 0;
+    border-radius: 0.5rem;
+    background: #eee8e8;
+    padding: 2rem 1.2rem;
+    font-size: 1.3rem;
+    color: #0e074d;
+    text-transform: none;
     width: 100%;
+    border: none;
   }
 
-  .container form .user__details {
-    max-height: 300px;
-    overflow-y: scroll;
+  .register-container .register-form-container form label {
+    font-size: 1.5rem;
+    margin: 0;
+    padding: 0;
   }
 
-  .user__details::-webkit-scrollbar {
-    width: 0;
+  .register-container .register-form-container form span {
+    font-size: 18px;
+    padding-left: 5px;
+    padding-right: 40px;
   }
-}
 
+  .register-container .register-form-container form .btn {
+    margin: 1rem 0;
+    font-size: 1.3rem;
+    width: 10%;
+    text-align: center;
+  }
+
+  .register-container .register-form-container form p {
+    padding-top: 1rem;
+    font-size: 1.3rem;
+    color: #666;
+    margin: 0;
+  }
+
+  .register-container .register-form-container form p a {
+    color: #27ae60;
+  }
+
+  .register-container .register-form-container form p a:hover {
+    color: #130f40;
+    text-decoration: underline;
+  }
+
+  .register-container .register-form-container form .form-group {
+    margin: 0;
+  }
+
+  .register-container .register-form-container form .form-group .error-mess {
+    font-size: 1.5rem;
+    position: relative;
+    color: rgb(243, 47, 47);
+    margin: 0;
+    padding: 0;
+  }
 </style>
