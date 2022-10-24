@@ -5,19 +5,21 @@
           <h1>Login</h1>
           <p>By logging in you agree to the ridiculously long terms that you didn't bother to read.</p>
         </div>
-        <div id="form">
-          <form @submit.prevent="doLogin">
+        <div>
+            <div id="form">
+                <form @submit.prevent="doLogin">
             <label for="email">Email</label>
             <input type="email" id="email" v-model="email" placeholder="yourEmail@gmail.com">
   
             <label for="password">Password</label>&nbsp;
             <input type="password" id="password" v-model="password" placeholder="**********">
-  
+            
             <button type="submit">Log in</button>
           </form>
         </div>
-      </div>
+        </div>
     </div>
+</div>
   </template>
   
   <script>
