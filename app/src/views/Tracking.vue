@@ -1,69 +1,86 @@
 <template>
-    <div class="tracking-wrapper">
-  <div class="tracking">
-    <div id="progress" class="progress-0">
-      <div class="empty-bar"></div>
-      <div class="color-bar"></div>
-      <ul>
-        <li class="bullet-1">
-          <div class="el"><i class='bx bx-check'></i></div>
-          <div class="txt">Order Processed</div>
-        </li>
-        <li class="bullet-2">
-          <div class="el"><i class='bx bx-check'></i></div>
-          <div class="txt">Order Shipped</div>
-        </li>
-        <li class="bullet-3">
-          <div class="el"><i class='bx bx-check'></i></div>
-          <div class="txt">Order En Route</div>
-        </li>
-        <li class="bullet-4">
-          <div class="el"><i class='bx bx-check'></i></div>
-          <div class="txt">Order Arrived</div>
-        </li>
-      </ul>
+  <div class="tracking-wrapper">
+    <div class="tracking">
+      <div id="progress" class="progress-0">
+        <div class="empty-bar"></div>
+        <div class="color-bar"></div>
+        <ul>
+          <li class="bullet-1">
+            <div class="el"><i class='bx bx-check'></i></div>
+            <div class="txt">Order Processed</div>
+          </li>
+          <li class="bullet-2">
+            <div class="el"><i class='bx bx-check'></i></div>
+            <div class="txt">Order Shipped</div>
+          </li>
+          <li class="bullet-3">
+            <div class="el"><i class='bx bx-check'></i></div>
+            <div class="txt">Order En Route</div>
+          </li>
+          <li class="bullet-4">
+            <div class="el"><i class='bx bx-check'></i></div>
+            <div class="txt">Order Arrived</div>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
-</div>
 
-<!--
+
 <div class="controls">
   <div>
-    <button id="prev"><i class='bx bx-chevron-left'></i> Prev</button>
-    <button id="next">Next <i class='bx bx-chevron-right'></i></button>
+    <button id="prev" @click="Prev"><i class='bx bx-chevron-left'></i> Prev</button>
+    <button id="next" @click="Next">Next <i class='bx bx-chevron-right'></i></button>
   </div>
   <div>
     <p>Step: <span id="step">0</span></p>
   </div>
 </div>
--->
 </template>
 
-<script>
-var prev = document.getElementById('prev');
-var next = document.getElementById('next');
+<script setup>
 var trak = document.getElementById('progress');
 var step = document.getElementById('step');
 
-next.addEventListener('click', function(){
-	var cls = trak.className.split('-').pop();
-	cls > 6 ? cls = 0 : cls++;
+function Next(){
+    var cls = trak.className.split('-').pop();
+    cls > 6 ? cls = 0 : cls++;
   
-  step.innerHTML = cls;
-	trak.className = 'progress-' + cls;
-});
+    step.innerHTML = cls;
+    trak.className = 'progress-' + cls;
+  }
 
-prev.addEventListener('click', function(){
-	var cls = trak.className.split('-').pop();
+function Prev(){
+  var cls = trak.className.split('-').pop();
 	cls < 1 ? cls = 7 : cls--;
   
   step.innerHTML = cls;
 	trak.className = 'progress-' + cls;
-});
+}
 </script>
 
+<script>
+  export default{
+    name : "Tracking",
+    data(){
+      return {
+        active : "tracking"
+      }
+    },
+    
+    methods: {
+      makeActive(tab){
+        this.active = tab
+      },
+    setView(view){
+        this.$store.commit('setView',view)
+        // console.log(window.location.pathname)
+      }
+    }
+  }
+</script>
 
-<style scoped>
+<style>
 /* vars */
 :root {
   --back: #eeeeee;
